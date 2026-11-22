@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="TAU קפיצה" />
+  <meta name="theme-color" content="#0f172a" media="(prefers-color-scheme: dark)" />
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+  <title>TAU קפיצה להרצאה</title>
+  <style>
+    :root {
+      --bg: #f8fafc; --card: #ffffff; --border: #e2e8f0;
+      --text: #0f172a; --muted: #64748b; --primary: #2563eb; --primary-fg: #ffffff;
+      --success-bg: #dcfce7; --success-fg: #15803d; --warn-bg: #fef3c7; --warn-fg: #b45309;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0f172a; --card: #1e293b; --border: #334155;
+        --text: #f8fafc; --muted: #94a3b8; --primary: #3b82f6; --primary-fg: #ffffff;
+        --success-bg: rgba(34,197,94,0.18); --success-fg: #4ade80;
+        --warn-bg: rgba(245,158,11,0.18); --warn-fg: #fbbf24;
+      }
+    }
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    body {
+      margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg); color: var(--text); padding-bottom: env(safe-area-inset-bottom, 20px);
+    }
+    .wrap { max-width: 720px; margin: 0 auto; padding: 14px 14px 32px; }
+    header {
+      display: flex; align-items: center; justify-content: space-between; gap: 8px;
+      padding-bottom: 12px; border-bottom: 1px solid var(--border); margin-bottom: 12px;
+    }
+    .brand { display: flex; align-items: center; gap: 10px; }
+    .logo {
+      width: 38px; height: 38px; border-radius: 12px; background: var(--primary);
+      color: var(--primary-fg); font-weight: 800; font-size: 13px;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    h1 { margin: 0; font-size: 16px; line-height: 1.2; }
+    .sub { font-size: 11.5px; color: var(--muted); margin-top: 2px; }
+    .btn-primary {
+      background: var(--primary); color: var(--primary-fg); border: none;
+      border-radius: 10px; padding: 8px 12px; font-size: 12px; font-weight: 600; cursor: pointer;
+    }
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 12px; margin-bottom: 12px; }
+    .row { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+    .row-between { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+    .days { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; width: 100%; margin-bottom: 10px; }
+    .day-btn {
+      padding: 8px 4px; border-radius: 10px; border: 1px solid var(--border);
+      background: var(--bg); color: var(--text); font-size: 13px; font-weight: 600; cursor: pointer;
+    }
+    .day-btn.active { background: var(--primary); color: var(--primary-fg); border-color: var(--primary); }
+    .time-bar { display: flex; align-items: center; gap: 10px; width: 100%; }
+    .time-bar input[type=range] { flex: 1; accent-color: var(--primary); height: 28px; }
+    .time-box {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-weight: 700; font-size: 14px;
+      padding: 5px 10px; border-radius: 8px; background: var(--bg); border: 1px solid var(--border);
+      min-width: 62px; text-align: center;
+    }
+    .tabs {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 6px;
+      background: var(--card); border: 1px solid var(--border); padding: 4px; border-radius: 12px; margin-bottom: 12px;
+    }
+    .tab {
+      padding: 10px 8px; border-radius: 9px; border: none; background: transparent;
+      color: var(--muted); font-size: 13px; font-weight: 700; cursor: pointer;
+    }
+    .tab.active { background: var(--primary); color: var(--primary-fg); }
+    .inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
+    input[type=search], select {
+      width: 100%; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--border);
+      background: var(--card); color: var(--text); font-size: 13px; outline: none;
+    }
+    .pills {
+      display: flex; gap: 6px; overflow-x: auto; padding-bottom: 6px; margin-bottom: 8px;
+      -webkit-overflow-scrolling: touch; scrollbar-width: none;
+    }
+    .pills::-webkit-scrollbar { display: none; }
+    .pill {
+      white-space: nowrap; padding: 6px 12px; border-radius: 999px; border: 1px solid var(--border);
+      background: var(--card); color: var(--muted); font-size: 12px; font-weight: 600; cursor: pointer;
+    }
+    .pill.active { background: var(--primary); color: var(--primary-fg); border-color: var(--primary); }
+    .list { display: flex; flex-direction: column; gap: 10px; }
+    .item {
+      background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 13px;
+      display: flex; flex-direction: column; gap: 8px;
+    }
+    .item-title { font-size: 15px; font-weight: 700; margin: 0; line-height: 1.3; }
+    .item-meta { font-size: 12px; color: var(--muted); }
+    .badge { display: inline-block; padding: 4px 9px; border-radius: 999px; font-size: 12px; font-weight: 600; }
+    .badge-ok { background: var(--success-bg); color: var(--success-fg); }
+    .badge-warn { background: var(--warn-bg); color: var(--warn-fg); }
+    .badge-neutral { background: var(--bg); color: var(--muted); border: 1px solid var(--border); }
+    .item-foot {
+      display: flex; align-items: center; justify-content: space-between; gap: 8px;
+      padding-top: 8px; border-top: 1px solid var(--border); font-size: 12px;
+    }
+    .empty { text-align: center; padding: 32px 16px; color: var(--muted); font-size: 13px; }
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="logo">TAU</div>
+        <div>
+          <h1>קפיצה להרצאה</h1>
+          <div id="status-line" class="sub">טוען מערכת שעות...</div>
+        </div>
+      </div>
+      <button id="btn-now" class="btn-primary">עכשיו</button>
+    </header>
+
+    <div class="card">
+      <div id="days" class="days"></div>
+      <div class="time-bar">
+        <span class="sub">שעה</span>
+        <input id="time-slider" type="range" min="480" max="1200" step="5" value="650" />
+        <div id="time-readout" class="time-box">10:50</div>
+      </div>
+    </div>
+
+    <div class="tabs">
+      <button id="tab-lec" class="tab active">הרצאות (<span id="cnt-lec">0</span>)</button>
+      <button id="tab-room" class="tab">חדרים ריקים (<span id="cnt-room">0</span>)</button>
+    </div>
+
+    <div class="inputs">
+      <input id="q" type="search" placeholder="חיפוש קורס, מרצה, חדר..." />
+      <select id="bldg"><option value="all">כל הבניינים</option></select>
+    </div>
+
+    <div id="fac-pills" class="pills"></div>
+    <div id="sub-lec" class="pills">
+      <button data-w="30" class="pill">ב-30 דק׳ הקרובות</button>
+      <button data-w="60" class="pill active">בשעה הקרובה</button>
+      <button data-w="now" class="pill">מתקיימות עכשיו</button>
+      <button data-w="all" class="pill">כל היום</button>
+    </div>
+    <div id="sub-room" class="pills hidden">
+      <button data-d="30" class="pill">פנוי 30+ דק׳</button>
+      <button data-d="60" class="pill active">פנוי שעה+</button>
+      <button data-d="120" class="pill">פנוי שעתיים+</button>
+    </div>
+
+    <div id="list" class="list"></div>
+    <div id="empty" class="empty hidden">אין תוצאות לטווח והסינון שנבחרו.</div>
+  </div>
+
+  <script>
+    let LECTURES = [];
+    const DAYS = ['ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי'];
+    const st = { mode: 'lec', day: 0, min: 650, fac: 'הכל', bldg: 'all', q: '', win: '60', minDur: 60 };
+
+    const toMin = s => { const [h, m] = s.split(':').map(Number); return h * 60 + m; };
+    const fromMin = m => `${String(Math.floor(m/60)).padStart(2,'0')}:${String(m%60).padStart(2,'0')}`;
+    const fmtDur = m => m >= 60 ? (Math.floor(m/60) === 1 ? 'שעה' : Math.floor(m/60) === 2 ? 'שעתיים' : Math.floor(m/60)+' שעות') + (m%60 ? ` ו-${m%60} דק׳` : '') : `${m} דק׳`;
+
+    function applyData(data) {
+      LECTURES = data.lectures || [];
+      const upd = data.updated_at ? new Date(data.updated_at).toLocaleDateString('he-IL', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }) : '';
+      document.getElementById('status-line').textContent = `${LECTURES.length.toLocaleString()} הרצאות · עודכן ${upd}`;
+      const bldgs = Array.from(new Set(LECTURES.map(x => x.building))).sort((a,b) => a.localeCompare(b, 'he'));
+      const cur = st.bldg;
+      document.getElementById('bldg').innerHTML = '<option value="all">כל הבניינים</option>' +
+        bldgs.map(b => `<option value="${b}" ${b===cur?'selected':''}>${b}</option>`).join('');
+      render();
+    }
+
+    async function loadSchedule() {
+      const cached = localStorage.getItem('tau_schedule_cache');
+      if (cached) {
+        try { applyData(JSON.parse(cached)); } catch {}
+      }
+      try {
+        const res = await fetch('./schedule.json?t=' + Date.now());
+        if (res.ok) {
+          const data = await res.json();
+          localStorage.setItem('tau_schedule_cache', JSON.stringify(data));
+          applyData(data);
+        }
+      } catch {}
+    }
+
+    function syncNow() {
+      const d = new Date();
+      st.day = d.getDay() <= 4 ? d.getDay() : 0;
+      const mins = d.getHours() * 60 + d.getMinutes();
+      st.min = Math.min(1200, Math.max(480, Math.round(mins / 5) * 5));
+      render();
+    }
+
+    function render() {
+      const daysEl = document.getElementById('days');
+      daysEl.innerHTML = DAYS.map((lbl, i) => `<button class="day-btn ${st.day===i?'active':''}" data-day="${i}">${lbl}</button>`).join('');
+      daysEl.querySelectorAll('.day-btn').forEach(b => b.onclick = () => { st.day = +b.dataset.day; render(); });
+
+      document.getElementById('time-slider').value = st.min;
+      document.getElementById('time-readout').textContent = fromMin(st.min);
+
+      const allFacs = ['הכל', ...Array.from(new Set(LECTURES.map(x => x.faculty)))];
+      const fp = document.getElementById('fac-pills');
+      fp.innerHTML = allFacs.map(f => `<button class="pill ${st.fac===f?'active':''}" data-f="${f}">${f}</button>`).join('');
+      fp.querySelectorAll('.pill').forEach(b => b.onclick = () => { st.fac = b.dataset.f; render(); });
+
+      document.getElementById('tab-lec').classList.toggle('active', st.mode === 'lec');
+      document.getElementById('tab-room').classList.toggle('active', st.mode === 'room');
+      document.getElementById('sub-lec').classList.toggle('hidden', st.mode !== 'lec');
+      document.getElementById('sub-room').classList.toggle('hidden', st.mode !== 'room');
+
+      const q = st.q.trim().toLowerCase();
+      const dayLecs = LECTURES.filter(l => l.day === st.day);
+
+      const lecs = dayLecs
+        .filter(l => st.fac === 'הכל' || l.faculty === st.fac)
+        .filter(l => st.bldg === 'all' || l.building === st.bldg)
+        .filter(l => !q || `${l.course} ${l.lecturer} ${l.building} ${l.room} ${l.code}`.toLowerCase().includes(q))
+        .map(l => { const s = toMin(l.start), e = toMin(l.end); return { ...l, s, e, diff: s - st.min, ongoing: st.min >= s && st.min < e }; })
+        .filter(l => st.win === '30' ? (l.diff >= 0 && l.diff <= 30) : st.win === '60' ? (l.diff >= 0 && l.diff <= 60) : st.win === 'now' ? l.ongoing : true)
+        .sort((a,b) => a.s - b.s);
+
+      const roomMap = new Map();
+      for (const l of LECTURES) {
+        const k = l.building + '|' + l.room;
+        if (!roomMap.has(k)) roomMap.set(k, { building: l.building, room: l.room, faculty: l.faculty });
+      }
+      const rooms = Array.from(roomMap.values())
+        .filter(r => st.fac === 'הכל' || r.faculty === st.fac)
+        .filter(r => st.bldg === 'all' || r.building === st.bldg)
+        .filter(r => !q || `${r.building} ${r.room} ${r.faculty}`.toLowerCase().includes(q))
+        .map(r => {
+          const cls = dayLecs.filter(l => l.building === r.building && l.room === r.room).map(l => ({ ...l, s: toMin(l.start), e: toMin(l.end) })).sort((a,b) => a.s - b.s);
+          if (cls.some(c => st.min >= c.s && st.min < c.e)) return null;
+          const next = cls.find(c => c.s > st.min);
+          const dur = Math.max(0, (next ? next.s : 1200) - st.min);
+          return { ...r, dur, until: next ? next.start : 'סוף היום', nextCourse: next ? next.course : null };
+        })
+        .filter(r => r && r.dur >= st.minDur)
+        .sort((a,b) => b.dur - a.dur);
+
+      document.getElementById('cnt-lec').textContent = lecs.length;
+      document.getElementById('cnt-room').textContent = rooms.length;
+
+      const listEl = document.getElementById('list');
+      const emptyEl = document.getElementById('empty');
+
+      if (st.mode === 'lec') {
+        emptyEl.classList.toggle('hidden', lecs.length > 0);
+        listEl.innerHTML = lecs.slice(0, 60).map(l => {
+          const badge = l.ongoing
+            ? `<span class="badge badge-ok">עכשיו · נשארו ${l.e - st.min} דק׳</span>`
+            : l.diff >= 0 && l.diff <= 30
+              ? `<span class="badge badge-warn">בעוד ${l.diff === 0 ? 'רגע!' : l.diff + ' דק׳'}</span>`
+              : `<span class="badge badge-neutral">${l.diff > 0 ? 'בעוד ' + fmtDur(l.diff) : 'הסתיים'}</span>`;
+          return `<div class="item">
+            <div><h3 class="item-title">${l.course}</h3><div class="item-meta">${l.lecturer} · ${l.faculty}</div></div>
+            <div class="row">${badge} <span class="badge badge-neutral">${l.start}–${l.end}</span></div>
+            <div class="item-foot"><strong>📍 ${l.building}, חדר ${l.room}</strong><span class="item-meta">${l.note}</span></div>
+          </div>`;
+        }).join('');
+      } else {
+        emptyEl.classList.toggle('hidden', rooms.length > 0);
+        listEl.innerHTML = rooms.slice(0, 60).map(r => `<div class="item">
+          <div class="row-between">
+            <div><h3 class="item-title">${r.building} · חדר ${r.room}</h3><div class="item-meta">${r.faculty}</div></div>
+            <span class="badge badge-ok">פנוי ל-${fmtDur(r.dur)}</span>
+          </div>
+          <div class="item-foot"><span class="item-meta">${r.nextCourse ? 'השיעור הבא ב-' + r.until + ' (' + r.nextCourse + ')' : 'פנוי עד סוף היום (20:00)'}</span></div>
+        </div>`).join('');
+      }
+    }
+
+    document.getElementById('btn-now').onclick = syncNow;
+    document.getElementById('time-slider').oninput = e => { st.min = +e.target.value; render(); };
+    document.getElementById('tab-lec').onclick = () => { st.mode = 'lec'; render(); };
+    document.getElementById('tab-room').onclick = () => { st.mode = 'room'; render(); };
+    document.getElementById('q').oninput = e => { st.q = e.target.value; render(); };
+    document.getElementById('bldg').onchange = e => { st.bldg = e.target.value; render(); };
+    document.querySelectorAll('#sub-lec .pill').forEach(b => b.onclick = () => {
+      document.querySelectorAll('#sub-lec .pill').forEach(x => x.classList.remove('active'));
+      b.classList.add('active'); st.win = b.dataset.w; render();
+    });
+    document.querySelectorAll('#sub-room .pill').forEach(b => b.onclick = () => {
+      document.querySelectorAll('#sub-room .pill').forEach(x => x.classList.remove('active'));
+      b.classList.add('active'); st.minDur = +b.dataset.d; render();
+    });
+
+    syncNow();
+    loadSchedule();
+  </script>
+</body>
+</html>
